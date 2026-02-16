@@ -1,7 +1,7 @@
 """
 fastapi_app.py: Serve the RAG system using FastAPI for API access.
 """
-from rag import llm_with_chat_history, vector_store, get_eval
+from rag import llm_with_chat_history, current_vector_store, get_eval
 from fastapi import FastAPI
 from pydantic import BaseModel
 
