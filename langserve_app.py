@@ -1,7 +1,7 @@
 """
 langserve_app.py: Serve the RAG chain using LangServe for API access.
 """
-from rag import llm_with_chat_history, vector_store, get_eval
+from rag import llm_with_chat_history, current_vector_store, get_eval
 from fastapi import FastAPI
 from langserve import add_routes
 
