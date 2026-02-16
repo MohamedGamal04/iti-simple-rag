@@ -1,0 +1,15 @@
+[project]
+name = "ITI-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gradio>=6.5.1",
+    "langchain>=1.2.10",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.1",
+    "langchain-nvidia-ai-endpoints>=1.0.4",
+    "langchain-openai>=1.1.9",
+    "pymupdf>=1.27.1",
+]
