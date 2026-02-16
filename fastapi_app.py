@@ -1,7 +1,7 @@
 """
 fastapi_app.py: Serve the RAG system using FastAPI for API access.
 """
-from rag import llm_with_chat_history, vector_store, get_eval
+from rag import llm_with_chat_history, current_vector_store, get_eval
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -13,7 +13,7 @@ class QueryRequest(BaseModel):
 @app.post("/rag")
 async def rag_endpoint(request: QueryRequest):
     query = request.query
-    results = vector_store.similarity_search_with_relevance_scores(query, k=5, score_threshold=0.2)
+    results = current_vector_store.similarity_search_with_relevance_scores(query, k=5, score_threshold=0.2)
     if not results:
         context_text = "No relevant context found."
     else:

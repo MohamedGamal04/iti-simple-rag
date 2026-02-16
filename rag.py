@@ -28,7 +28,7 @@ embedder = NVIDIAEmbeddings(
 )
 
 llm = ChatNVIDIA(
-    model="openai/gpt-oss-20b",
+    model="meta/llama-3.1-405b-instruct",
     api_key=os.getenv("NVIDIA_API_KEY"),
     temperature=0,
     streaming=False,
