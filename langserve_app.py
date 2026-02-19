@@ -1,16 +1,38 @@
 """
 langserve_app.py: Serve the RAG chain using LangServe for API access.
 """
-from rag import llm_with_chat_history, current_vector_store, get_eval
-from fastapi import FastAPI
+from rag import demo, llm_with_chat_history, current_vector_store, get_eval
+from fastapi import FastAPI, HTTPException
+import gradio as gr
 from langserve import add_routes
+from pydantic import BaseModel
 
 app = FastAPI(title="Mini RAG LangServe API")
 
+DEFAULT_SCORE_THRESHOLD = 0.2
+
+
+class QueryRequest(BaseModel):
+        query: str
+        score_threshold: float | None = None
+
 # Example endpoint for RAG chat
 @app.post("/rag")
-async def rag_endpoint(query: str):
-    results = vector_store.similarity_search_with_relevance_scores(query, k=5, score_threshold=0.2)
+async def rag_endpoint(request: QueryRequest):
+    if current_vector_store is None:
+        raise HTTPException(status_code=400, detail="No PDF has been loaded. Upload a PDF in the Gradio app first.")
+
+    query = request.query.strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Please provide a non-empty query.")
+
+    score_threshold = request.score_threshold if request.score_threshold is not None else DEFAULT_SCORE_THRESHOLD
+
+    results = current_vector_store.similarity_search_with_relevance_scores(
+        query,
+        k=5,
+        score_threshold=score_threshold,
+    )
     if not results:
         context_text = "No relevant context found."
     else:
@@ -27,6 +49,9 @@ async def rag_endpoint(query: str):
 
 # Add LangServe routes for the chain (optional, for more advanced use)
 add_routes(app, llm_with_chat_history, path="/chain")
+
+# Mount the Gradio UI at the root path
+app = gr.mount_gradio_app(app, demo, path="/")
 
 if __name__ == "__main__":
     import uvicorn
